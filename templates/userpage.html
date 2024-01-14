@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<style>
+.column {
+  float: left;
+  width: 25%;
+  background-color: rgb(48,48,48);
+  margin:20px;
+  color:white;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+ background-color: rgb(48,48,48);
+ color=white;
+}
+.button {
+  background-color: #04AA6D;
+  border: none;
+  color: black;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+
+  width:10%;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+
+.button2:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+
+
+</style>
+<body style="background-color: rgb(40,40,40);">
+<h1 style="color:white">Welcome to User Page, {{ uname }}</h1>
+
+
+<form class="modal-content animate" action="homepage" method="get">
+    <button class="button button2" type="submit">Back to Homepage</button>
+</form>
+<br>
+<div class="row" style="background-color: rgb(48,48,48); border-style:solid; ">
+
+
+    <br>
+    <form action="prefresult" method="post" style="background-color: rgb(48,48,48);">{% csrf_token %}
+        <p>
+        <h2 style="color:white">Fill out your Preferences:</h2></p>
+
+        <div class="row">
+            <div class="column">
+                <label>Enter Your Name: </label><br>
+                <textarea type="text" name="sname"></textarea><br><br>
+            </div>
+
+            <div class="column">
+                <label>Enter Your Roll Number: </label><br>
+                <textarea type="text" name="sroll"></textarea><br><br>
+            </div>
+            <div class="column">
+                <label>Enter Your Department: </label><br>
+                <textarea type="text" name="sdept"></textarea><br><br>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <p>
+            <h3 style="color:white">Enter your Preference No. 1</h3></p>
+
+            <div class="column">
+                <label>Enter Hostel Number1: </label><br>
+                <textarea type="text" name="hnum1"></textarea><br><br>
+            </div>
+
+            <div class="column">
+                <label>Enter Floor Number1: </label><br>
+                <textarea type="text" name="fnum1"></textarea><br><br>
+            </div>
+            <div class="column">
+                <label>Enter Room Number1: </label><br>
+                <textarea type="text" name="rnum1"></textarea><br><br>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <p>
+            <h3 style="color:white">Preference No. 2</h3></p>
+
+            <div class="column">
+                <label>Enter Hostel Number2: </label><br>
+                <textarea type="text" name="hnum2"></textarea><br><br>
+            </div>
+
+            <div class="column">
+                <label>Enter Floor Number2: </label><br>
+                <textarea type="text" name="fnum2"></textarea><br><br>
+            </div>
+            <div class="column">
+                <label>Enter Room Number2: </label><br>
+                <textarea type="text" name="rnum2"></textarea><br><br>
+            </div>
+        </div>
+
+        <div class="row">
+            <p>
+            <h3 style="color:white">Preference No. 3</h3></p>
+
+            <div class="column">
+                <label>Enter Hostel Number3: </label><br>
+                <textarea type="text" name="hnum3"></textarea><br><br>
+            </div>
+
+            <div class="column">
+                <label>Enter Floor Number3: </label><br>
+                <textarea type="text" name="fnum3"></textarea><br><br>
+            </div>
+            <div class="column">
+                <label>Enter Room Number3: </label><br>
+                <textarea type="text" name="rnum3"></textarea><br><br>
+            </div>
+
+        </div>
+
+        <div>
+            <button type="submit" class="button button2">Submit</button>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>

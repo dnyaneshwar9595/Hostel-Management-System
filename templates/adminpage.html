@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<style>
+.column {
+  float: left;
+  width: 33.33%;
+  background-color: rgb(48,48,48);
+  color:white;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+
+}
+.button {
+  background-color: #04AA6D; /* Green */
+  border: none;
+  color: black;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+
+  width:10%;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+
+.button2:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+</style >
+<body style="background-color: rgb(30,30,30);">
+<h1 style="color:white">Welcome to Admin Page, {{ uname }}</h1>
+
+        <form class="modal-content animate" action="homepage" method="get">
+            <button class="button button2" type="submit">Back to Homepage</button>
+         </form>
+
+<div class="row" style="background-color: #dddddd; border-style:solid; ">
+<form action="showdata" method="get" style="background-color: rgb(48,48,48);">
+    <br>
+    <h2 style="color:white">Enter any Detail to Search</h2>
+
+    <div class="column">
+      <label >Enter Hostel Number: </label><br>
+      <textarea type="text" name="hnum"></textarea><br><br>
+    </div>
+
+    <div class="column">
+      <label >Enter Floor Number: </label><br>
+      <textarea type="text" name="fnum"></textarea><br><br>
+    </div>
+    <div class="column">
+      <label >Enter Room Number: </label><br>
+      <textarea type="text" name="rnum"></textarea><br><br>
+    </div>
+
+    <br><br>
+    <div class="column">
+      <label >Enter Student Name: </label><br>
+      <textarea type="text" name="sname"></textarea><br><br>
+    </div>
+
+    <div class="column">
+      <label >Enter Student Roll Number: </label><br>
+      <textarea type="text" name="sroll"></textarea><br><br>
+    </div>
+    <div class="column">
+      <label >Enter Department: </label><br>
+      <textarea type="text" name="sdept"></textarea><br><br>
+    </div>
+
+    <br><br>
+
+    <div >
+        <button type="submit" class="button button2">Search</button>
+    </div><br>
+
+</form>
+</div>
+
+<br><br>
+
+<div class="row" style="background-color: #dddddd; border-style:solid;">
+<form action="insertdata" method="post" style="background-color: rgb(48,48,48);" > {% csrf_token %}
+    <br>
+    <h2 style="color:white">Enter Details to Insert</h2>
+
+    <div class="column">
+      <label >Enter Hostel Number: </label><br>
+      <textarea type="text" name="inserthoastelalloted"></textarea><br><br>
+    </div>
+
+    <div class="column">
+      <label >Enter Floor Number: </label><br>
+      <textarea type="text" name="insertfloorno"></textarea><br><br>
+    </div>
+    <div class="column">
+      <label >Enter Room Number: </label><br>
+      <textarea type="text" name="insertroomno"></textarea><br><br>
+    </div>
+
+    <br><br>
+    <div class="column">
+      <label >Enter Student Name: </label><br>
+      <textarea type="text" name="insertstudentname"></textarea><br><br>
+    </div>
+
+    <div class="column">
+      <label >Enter Student Roll Number: </label><br>
+      <textarea type="text" name="insertrollnumber"></textarea><br><br>
+    </div>
+    <div class="column">
+      <label >Enter Department: </label><br>
+      <textarea type="text" name="insertdepartment"></textarea><br><br>
+    </div>
+    <br><br>
+    <div>
+    <button type="submit" class="button button2">Insert</button><br>
+    </div><br>
+
+</form>
+</div>
+
+<br><br>
+
+
+<div class="row" style="background-color: #dddddd;border-style:solid;">
+<form action="updatedata" method="post" style="background-color: rgb(48,48,48);">{% csrf_token %}
+    <br>
+    <h2 style="color:white">Enter Details to Update</h2>
+
+    <div class="column">
+      <label >Enter Hostel Number: </label><br>
+      <textarea type="text" name="updatehoastelalloted"></textarea><br><br>
+    </div>
+
+    <div class="column">
+      <label >Enter Floor Number: </label><br>
+      <textarea type="text" name="updatefloorno"></textarea><br><br>
+    </div>
+    <div class="column">
+      <label >Enter Room Number: </label><br>
+      <textarea type="text" name="updateroomno"></textarea><br><br>
+    </div>
+    <br><br>
+
+    <div class="column">
+      <label >Enter Student Name: </label><br>
+      <textarea type="text" name="updatestudentname"></textarea><br><br>
+    </div>
+
+    <div class="column">
+      <label >Enter Student Roll Number: </label><br>
+      <textarea type="text" name="updaterollnumber"></textarea><br><br>
+    </div>
+    <div class="column">
+      <label >Enter Department: </label><br>
+      <textarea type="text" name="updatedepartment"></textarea><br><br>
+    </div>
+    <br><br>
+    <div>
+        <button type="submit" class="button button2">Update</button>
+    </div>
+    <br>
+</form>
+</div>
+<br><br>
+
+<div class="row" style="background-color: #dddddd;border-style:solid;">
+<form action="deletedata" method="post" style="background-color: rgb(48,48,48);">{% csrf_token %}
+    <br>
+    <h2 style="color:white">Enter Details to Delete </h2></p>
+
+    <div class="column">
+      <label >Enter Hostel Number: </label><br>
+      <textarea type="text" name="deletehoastelalloted"></textarea><br><br>
+    </div>
+
+    <div class="column">
+      <label >Enter Floor Number: </label><br>
+      <textarea type="text" name="deletefloorno"></textarea><br><br>
+    </div>
+    <div class="column">
+      <label >Enter Room Number: </label><br>
+      <textarea type="text" name="deleteroomno"></textarea><br><br>
+    </div>
+    <br><br>
+    <div >
+        <button type="submit" class="button button2">Delete</button><br>
+    </div>
+    <br>
+</form>
+</div>
+<br><br><br>
+
+
+
+</body>
+
+</html>

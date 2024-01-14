@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Students Details </title>
+</head>
+<style>
+    table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  color:white;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: rgb(24,24,24);;
+}
+.button {
+          background-color: #04AA6D; /* Green */
+          border: none;
+          color: black;
+          padding: 15px 25px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+
+          width:30%;
+          -webkit-transition-duration: 0.4s; /* Safari */
+          transition-duration: 0.4s;
+        }
+
+        .button2:hover {
+          box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(255,255,255,0.19);
+        }
+</style>
+
+<body style=" background-color: rgb(48,48,48);">
+<h1 style="color:white">
+    Student Details
+</h1>
+
+<form class="modal-content animate" action="homepage" method="get">
+            <button class="button button2"  type="submit">Go back to HomePage</button>
+        </form>
+<table>
+  <tr>
+      <th>Students Roll Number</th>
+      <th>Student name</th>
+      <th>Students Department</th>
+      <th>Hostel Number</th>
+      <th>Room Number</th>
+      <th>Floor Number</th>
+  </tr>
+    {% block content%}
+    {% for result in hosteldata%}
+  <tr>
+      <td>{{ result.rollnumber }}</td>
+      <td>{{ result.studentname }}</td>
+      <td>{{ result.department }}</td>
+      <td>{{ result.hoastelalloted }}</td>
+      <td>{{ result.roomno }}</td>
+      <td>{{ result.floorno }}</td>
+  </tr>
+    {% endfor%}
+    {% endblock%}
+</table>
+{% if messages %}
+{% for msg in messages %}
+<b style="color:green;">{{msg}}</b><br>
+{% endfor %}
+{% endif %}
+</body>
+</html>
