@@ -254,151 +254,66 @@ def userpage(request):
 
 # User preference Accepted or Rejected
 # =======================================================================================================================
-def prefresult(request):
-    # Cheking it it is the post request and if all the entries are entered correctly else it will not allocate any room to student
-    if request.method == 'POST':
-        if request.POST.get('sroll') and \
-                request.POST.get('sname') and \
-                request.POST.get('sdept') and \
-                request.POST.get('hnum1') and \
-                request.POST.get('fnum1') and \
-                request.POST.get('rnum1') and \
-                request.POST.get('hnum2') and \
-                request.POST.get('fnum2') and \
-                request.POST.get('rnum2') and \
-                request.POST.get('hnum3') and \
-                request.POST.get('fnum3') and \
-                request.POST.get('rnum3'):
+from django.db import transaction
+from django.core.cache import cache
 
-            # allocaterecord = -1
-            # Temporaray variable in which inputs are stored
+@transaction.atomic
+def prefresult(request):
+    if request.method == 'POST':
+        # Check if all required entries are provided in the POST request
+        if all(request.POST.get(key) for key in ['sroll', 'sname', 'sdept', 'hnum1', 'fnum1', 'rnum1', 'hnum2', 'fnum2', 'rnum2', 'hnum3', 'fnum3', 'rnum3']):
+            # Temporary variables to store inputs
             rollnumber = request.POST.get('sroll')
             studentname = request.POST.get('sname')
             department = request.POST.get('sdept')
-
-            allotedhostelnum = "NULL"
-            allotedfloornum = "NULL"
-            allotedroomnum = -1
-
-            # getting all the inputs into variables
-            hnum1 = request.POST.get('hnum1')
-            rnum1 = request.POST.get('rnum1')
-            fnum1 = request.POST.get('fnum1')
-
-            hnum2 = request.POST.get('hnum2')
-            rnum2 = request.POST.get('rnum2')
-            fnum2 = request.POST.get('fnum2')
-
-            hnum3 = request.POST.get('hnum3')
-            rnum3 = request.POST.get('rnum3')
-            fnum3 = request.POST.get('fnum3')
-            allocated = 0
-            # Preference 01 checking the  room physically exists
-            if HostelDataClass.objects.filter(roomno=rnum1).exists():
-                # checking if the room is already occupied by someone
-                if HostelDataClass.objects.filter(rollnumber__isnull=True).count() > 0:
-                    messages.success(request, "Student " + studentname + " cannot be added to Room " + str(
-                        rnum1) + "\n----FAILED to Allocate \n Room Already Occupied\n")
-                else:
-                    allocaterecord = HostelDataClass.objects.get(roomno=rnum1)
-                    allocaterecord.rollnumber = rollnumber
-                    allocaterecord.studentname = studentname
-                    allocaterecord.department = department
-                    allotedhostelnum = hnum1
-                    allotedfloornum = fnum1
-                    allotedroomnum = rnum1
-                    allocaterecord.save()
-                    allocated = 1
-                    messages.success(request, "Student " + allocaterecord.studentname + " Allocated to Room " + str(
-                        rnum1) + "\n---- SUCCESS Preference 1\n")
+            allocated_room = None
+            
+            # Loop through the preferences and attempt to allocate the room
+            for pref_num in range(1, 4):
+                hnum = request.POST.get(f'hnum{pref_num}')
+                rnum = request.POST.get(f'rnum{pref_num}')
+                fnum = request.POST.get(f'fnum{pref_num}')
+                
+                # Attempt to allocate the room
+                allocated_room = allocate_room(rollnumber, studentname, department, hnum, rnum, fnum)
+                
+                # If room allocation is successful, break the loop
+                if allocated_room:
+                    break
+            
+            # Check if room allocation was successful
+            if allocated_room:
+                messages.success(request, f"Student {studentname} allocated to Room {allocated_room.roomno}")
             else:
-                messages.success(request, "Incorrect Preference1 Room" + str(
-                    rnum1) + " Does not exist .Try giving preference again!!\n\n\n\n")
-
-            # Preference 02 checking if already room allocated in upper preferences
-            if allocated == 0:
-                # checking the  room physically exists
-                if HostelDataClass.objects.filter(roomno=rnum2).exists():
-                    # checking if the room is already occupied by someone
-                    if HostelDataClass.objects.filter(rollnumber__isnull=True).count() > 0:
-                        messages.success(request, "Student " + studentname + " cannot be added to Room " + str(
-                            rnum2) + "\n----FAILED to Allocate \n Room Already Occupied\n")
-                    else:
-                        allocaterecord = HostelDataClass.objects.get(roomno=rnum2)
-                        allocaterecord.rollnumber = rollnumber
-                        allocaterecord.studentname = studentname
-                        allocaterecord.department = department
-                        allotedhostelnum = hnum2
-                        allotedfloornum = fnum2
-                        allotedroomnum = rnum2
-                        allocaterecord.save()
-                        allocated = 1
-                        messages.success(request, "Student " + studentname + " Allocated to Room " + str(
-                            rnum2) + "\n---- SUCCESS Preference 2\n")
-                else:
-                    messages.success(request, "Incorrect Preference2 Room" + str(
-                        rnum2) + " Does not exist .Try giving preference again!!\n\n\n")
-
-            # Preference 03 checking if already room allocated in upper preferences
-            if allocated == 0:
-                # checking the  room physically exists
-                if HostelDataClass.objects.filter(roomno=rnum3).exists():
-                    # checking if the room is already occupied by someone
-                    if HostelDataClass.objects.filter(rollnumber__isnull=True).count() > 0:
-                        messages.success(request, "Student " + studentname + " cannot be added to Room " + str(
-                            rnum3) + "\n----FAILED to Allocate \n Room Already Occupied\n\n")
-                    else:
-                        allocaterecord = HostelDataClass.objects.get(roomno=rnum3)
-                        allocaterecord.rollnumber = rollnumber
-                        allocaterecord.studentname = studentname
-                        allocaterecord.department = department
-                        allotedhostelnum = hnum3
-                        allotedfloornum = fnum3
-                        allotedroomnum = rnum3
-                        allocaterecord.save()
-                        allocated = 1
-                        messages.success(request, "Student " + studentname + " Allocated to Room " + str(
-                            rnum3) + "\n---- SUCCESS Preference 2\n\n")
-                else:
-                    messages.success(request, "Incorrect Preference3 Room" + str(
-                        rnum3) + " Does not exist .Try giving preference again!!\n\n\n")
-            # If not allocated in any of the three preferences
-            if allocated == 0:
-                found = 0
-                emptyroom = None
-                dbdata = HostelDataClass.objects.all()
-                listoffloors = [fnum1, fnum2, fnum3]
-                for fl in listoffloors:
-                    # print(fl)
-                    data_db = dbdata.filter(floorno=fl)
-                    if found == 0:
-                        # print("found= " + str(found))
-                        for row in data_db:
-                            print(row.rollnumber)
-                            if row.rollnumber == None:
-                                print(" my room number" + str(row.roomno))
-                                emptyroom = row.roomno
-                                found = 1
-                                break
-
-                if emptyroom != None:
-                    allocateHere = HostelDataClass.objects.get(roomno=emptyroom)
-                    allocateHere.rollnumber = rollnumber
-                    allocateHere.studentname = studentname
-                    allocateHere.department = department
-                    allocateHere.save()
-                    messages.success(request,
-                                     "Cannot allocate to given Preferences" + " Room allocated randomly at Room Number " + str(
-                                         emptyroom) + " at Hostel " + allocateHere.hoastelalloted)
-                else:
-                    messages.success(request,
-                                     "We Tried allocating room on the floor numbers given but No Room available (Not exists or Already Occupied) Contact Admin")
+                messages.error(request, f"Failed to allocate room for Student {studentname}")
+        
         else:
-            messages.success(request, "Some Entries are missing in the preferences Go back to User page!")
-            return render(request, 'prefresult.html')
-    # showit = {'rollnumber': rollnumber, 'studentname': studentname, 'department': department,
-    #           'hoastelalloted': allotedhostelnum, 'roomno': allotedroomnum, 'floorno': allotedfloornum}
+            messages.error(request, "Some entries are missing in the preferences. Please fill all fields.")
+    
     return render(request, 'prefresult.html')
+
+def allocate_room(rollnumber, studentname, department, hnum, rnum, fnum):
+    lock_key = f"room_lock_{rnum}"
+    
+    # Acquire lock for the room
+    with cache.lock(lock_key):
+        # Check if the room exists and is available
+        if HostelDataClass.objects.filter(roomno=rnum).exists():
+            room = HostelDataClass.objects.get(roomno=rnum)
+            
+            # Check if the room is vacant
+            if not room.rollnumber:
+                # Allocate the room to the student
+                room.rollnumber = rollnumber
+                room.studentname = studentname
+                room.department = department
+                room.save()
+                return room
+            
+            else:
+                return None
+        else:
+            return None
 
 
 # ========================================================================================================================
