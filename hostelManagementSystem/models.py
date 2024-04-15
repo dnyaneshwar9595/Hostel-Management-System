@@ -4,25 +4,40 @@ from django.db.models import UniqueConstraint
 
 
 #declared the class
+from django.db import models
+from django.contrib.auth.models import User
 
-class HostelDataClass(models.Model):
-    rollnumber = models.CharField(max_length=255)
-    studentname = models.CharField(max_length=255)
-    department = models.CharField(max_length=255)
-    hoastelalloted = models.CharField(max_length=255)
-    roomno = models.IntegerField(primary_key=True)
-    floorno = models.IntegerField()
-    # UniqueConstraint(fields=['hoastelalloted', 'roomno'], name='PRIMARY_KEY')
+class Hostel(models.Model):
+    name = models.CharField(max_length=100)
+    location = models.CharField(max_length=100)
+    description = models.TextField()
+    image = models.ImageField(upload_to='hostel_images/', null=True, blank=True)
+    
+    def __str__(self):
+        return self.name
 
-    class Meta:
-        db_table = "hosteldata"
+class Room(models.Model):
+    hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
+    room_number = models.CharField(max_length=10)
+    capacity = models.IntegerField()
+    
+    def __str__(self):
+        return f"Room {self.room_number} - {self.hostel.name}"
 
-class HostelReviews(models.Model):
-    rollnumber = models.CharField(max_length=255,primary_key=True)
-    studentname = models.CharField(max_length=255)
-    hostelnum = models.CharField(max_length=255)
-    review = models.CharField(max_length=1000)
-    # hostelimages = models.ImageField(upload_to="", default="")
+class Student(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    roll_number = models.CharField(max_length=20, unique=True)
+    hostel = models.ForeignKey(Hostel, on_delete=models.SET_NULL, null=True, blank=True)
+    room = models.OneToOneField(Room, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    def __str__(self):
+        return self.user.username
 
-    class Meta:
-        db_table = "hostelreviews"
+class Review(models.Model):
+    hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    review = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Review of {self.hostel.name} by {self.student.user.username}"
