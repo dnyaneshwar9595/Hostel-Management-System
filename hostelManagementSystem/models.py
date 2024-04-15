@@ -1,8 +1,3 @@
-# i created this
-from django.db import models
-from django.db.models import UniqueConstraint
-
-
 #declared the class
 from django.db import models
 from django.contrib.auth.models import User
