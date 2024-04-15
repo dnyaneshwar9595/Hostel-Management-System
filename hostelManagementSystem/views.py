@@ -418,12 +418,13 @@ def searchreview(request):
     inputhnum = request.GET.get('hnum', 'default')
     # print(inputsname)
     # filtering out data on the basis of given inputs (when inputs are not empty)
+
     if inputsname != '':
-        showall = showall.filter(studentname__contains=inputsname)
+        showall = showall.Q(student__user__username__icontains=inputsname)
     if inputsroll != '':
-        showall = showall.filter(rollnumber__contains=inputsroll)
+        showall = showall.Q(student__roll_number__icontains=inputsroll)
     if inputhnum != '':
-        showall = showall.filter(hostelnum__contains=inputhnum)
+        showall = showall.Q(hostel__name__icontains=inputhnum)
     return render(request, 'showreview.html', {"hosteldata": showall})
 
 
