@@ -33,7 +33,7 @@ class Student(models.Model):
     def __str__(self):
         return self.user.username
 
-class Review(models.Model):
+class HostelReviews(models.Model):
     hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     review = models.TextField()
